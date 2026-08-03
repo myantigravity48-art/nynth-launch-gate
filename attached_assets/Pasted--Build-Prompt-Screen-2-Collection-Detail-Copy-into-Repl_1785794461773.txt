@@ -1,0 +1,58 @@
+# Build Prompt — Screen 2: Collection Detail
+
+Copy into Replit as its own page/component. Build in isolation with mock data — no other screens exist yet.
+
+## Purpose
+
+Where the team manages one specific collection: see who signed up, and fire off the unlock emails when it's launch time.
+
+## Route
+
+`/admin/[collectionId]`
+
+## Brand system — Nynth World
+
+- Pure white (#FFFFFF) and pure black (#000000) only, same as Dashboard.
+- Internal-tool clarity over editorial polish. Dense, scannable, functional.
+
+## Mock data
+
+```ts
+type Collection = {
+  id: string;
+  name: string;
+  slug: string;
+  launchDatetime: string;
+  status: "locked" | "live";
+};
+
+type Signup = {
+  id: string;
+  collectionId: string;
+  email: string;
+  unlocked: boolean;
+  createdAt: string;
+};
+```
+
+Seed one mock collection (status `locked`) with 8-10 mock signups, most `unlocked: false`, a couple `true` (to show the visual state works both ways).
+
+## Layout
+
+- Header section: collection name, slug, launch date/time, status badge — same visual language as the Dashboard's status indicators
+- A "Back to Dashboard" link/breadcrumb (doesn't need to actually route yet)
+- Signup list — table with columns: email, signed-up date, unlocked status (yes/no, styled clearly)
+- Signup count total shown prominently (e.g. "24 signups")
+- A single primary action button: **"Send Unlock Emails"** — large, unmissable, this is the entire point of the tool. Style it as the one moment of visual weight on an otherwise minimal screen.
+- Clicking the button should trigger a mock confirmation state — e.g. a modal or inline banner: "Unlock emails sent to 24 signups" — using local state only, no real send logic
+- After the mock send, flip all mock signups to `unlocked: true` in local state so the table visibly updates — this sells the interaction even though nothing real happened yet
+
+## Explicitly out of scope
+
+- No real email sending, no Firebase read/write — mock data and local state only
+- No password generation logic yet — signups just have a boolean `unlocked` flag for now, not an actual password field
+- No scheduling logic — the button is a manual "send now" trigger only, for this screen's purposes
+
+## Deliverable
+
+One responsive Collection Detail screen, previewable standalone, where clicking "Send Unlock Emails" convincingly simulates the core action of the entire tool.
