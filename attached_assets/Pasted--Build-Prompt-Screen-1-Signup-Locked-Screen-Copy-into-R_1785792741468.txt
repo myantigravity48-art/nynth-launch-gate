@@ -1,0 +1,36 @@
+# Build Prompt — Screen 1: Signup / Locked Screen
+
+Copy into Replit as its own component/page. Build this screen in isolation — don't wire it to other screens yet.
+
+## Purpose
+
+This is the first thing visitors see before a collection launches. One job: capture the email, make them feel like they're getting into something exclusive.
+
+## Route
+
+`/[collectionSlug]` when the mocked collection's `status` is `"locked"`
+
+## Brand system — Nynth World
+
+- **Colors:** pure white (#FFFFFF) and pure black (#000000) ONLY. No grays, no accent colors, no gradients. Every element must justify itself in a 2-color palette — use size, weight, spacing, and negative space to create hierarchy, not color.
+- **Typography:** bold, editorial, fashion-brand energy. A strong sans-serif or a striking serif for the collection name/headline. Generous letter-spacing on any all-caps text.
+- **Mood:** minimal, confident, high-fashion drop culture — think a Supreme or Off-White launch page, not a generic SaaS landing page.
+
+## Layout
+
+- Full-bleed black or white background (your call which reads stronger — commit to one, don't split the screen)
+- Collection name, large, centered or left-aligned
+- Countdown to `launchDatetime` (mock a future date) — days/hours/minutes, styled as a design element, not a plain text string
+- Email input + submit button — single field, no clutter. Button should feel deliberate: solid black on white or solid white on black, sharp corners (no rounded pill buttons — keep it structured, not soft)
+- On submit: swap the form for a confirmation state in place — "You're on the list." plus a short line implying they'll be emailed when it drops. No page navigation, just a state change.
+- Subtle Nynth wordmark/logo placeholder, small, top of screen
+
+## Explicitly out of scope
+
+- No real form submission/API call — local state only
+- No navigation to other screens
+- No color outside black/white/pure grayscale-as-opacity (e.g., black at 50% opacity is fine, introducing an actual gray hex is not)
+
+## Deliverable
+
+One responsive, mobile-first screen component I can preview standalone, with the signup interaction working via local state.
