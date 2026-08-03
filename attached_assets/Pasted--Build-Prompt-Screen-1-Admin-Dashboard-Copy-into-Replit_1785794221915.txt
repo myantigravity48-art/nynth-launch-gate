@@ -1,0 +1,50 @@
+# Build Prompt — Screen 1: Admin Dashboard
+
+Copy into Replit as its own page/component. Build in isolation with mock data — no other screens exist yet.
+
+## Purpose
+
+The landing screen for whoever on the Nynth team opens this tool. At a glance: what collections exist, what state each is in, and a way into each one.
+
+## Route
+
+`/admin` (or `/` if this is the only entry point into the tool — your call, keep it simple)
+
+## Brand system — Nynth World
+
+- Colors: pure white (#FFFFFF) and pure black (#000000) only. No grays as hex values (opacity-based black/white is fine), no accent colors.
+- This is an internal tool, not a customer-facing brand moment — prioritize clarity, density, and scannability over editorial flourish. Simple, confident, no wasted motion.
+- Typography: clean sans-serif, no need for the bold editorial treatment of a customer-facing screen.
+
+## Mock data
+
+```ts
+type Collection = {
+  id: string;
+  name: string;
+  slug: string;
+  launchDatetime: string; // ISO string
+  status: "locked" | "live";
+  signupCount: number;
+};
+```
+
+Seed 4-5 mock collections — mix of `locked` (future launch dates) and `live` (past launch dates).
+
+## Layout
+
+- Simple header: "Nynth Launch Gate" wordmark/label, black on white
+- A table or card list of collections, each row/card showing: name, slug, launch date, status (as a clear black/white badge or label — no color-coding since we're black/white only, use filled vs outlined to distinguish locked vs live), signup count
+- Each row is clickable → intended to route to Collection Detail (just make it look clickable for now, doesn't need to actually navigate anywhere yet)
+- A prominent "+ New Collection" button, top-right or top of the list — intended to route to Create New Collection screen (same: looks clickable, doesn't need to route yet)
+- Sort or the list ordered with `locked`/upcoming collections first, then `live` ones — most actionable items should be easiest to see
+
+## Explicitly out of scope
+
+- No real routing between screens yet
+- No Firebase, no real data — mock array only
+- No auth/login screen yet (assume whoever opens this tool is already an authorized team member)
+
+## Deliverable
+
+One responsive admin dashboard screen, previewable standalone, showing the mock collection list with clear visual distinction between locked and live states.
