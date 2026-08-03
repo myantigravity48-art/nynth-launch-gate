@@ -2,6 +2,7 @@
 type ModuleMap = Record<string, () => Promise<Record<string, unknown>>>;
 export const modules: ModuleMap = {
   "./components/mockups/nynth-admin/CollectionDetail.tsx": () => import("../components/mockups/nynth-admin/CollectionDetail.tsx"),
+  "./components/mockups/nynth-admin/CreateCollection.tsx": () => import("../components/mockups/nynth-admin/CreateCollection.tsx"),
   "./components/mockups/nynth-admin/Dashboard.tsx": () => import("../components/mockups/nynth-admin/Dashboard.tsx"),
   "./components/mockups/nynth-world/LockedScreen.tsx": () => import("../components/mockups/nynth-world/LockedScreen.tsx")
 };

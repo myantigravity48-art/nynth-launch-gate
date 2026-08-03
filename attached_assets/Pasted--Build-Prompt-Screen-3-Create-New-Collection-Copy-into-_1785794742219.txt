@@ -1,0 +1,47 @@
+# Build Prompt — Screen 3: Create New Collection
+
+Copy into Replit as its own page/component. Build in isolation with mock data — no other screens exist yet.
+
+## Purpose
+
+This is what makes the tool reusable — instead of rebuilding it for every launch, the team spins up a new collection here in seconds. Simple form, nothing more.
+
+## Route
+
+`/admin/new`
+
+## Brand system — Nynth World
+
+- Pure white (#FFFFFF) and pure black (#000000) only, same as Dashboard and Collection Detail.
+- Internal-tool clarity — this should feel like the fastest, lowest-friction screen in the whole tool. The team will use this every single launch cycle, so no unnecessary steps.
+
+## Mock data / form fields
+
+```ts
+type NewCollectionForm = {
+  name: string;
+  slug: string; // auto-generate from name, but allow editing
+  launchDatetime: string; // date + time picker
+};
+```
+
+## Layout
+
+- "Back to Dashboard" link/breadcrumb (doesn't need to actually route yet)
+- Simple, single-column form:
+  - Collection name (text input)
+  - Slug (text input, auto-fills as a kebab-case version of the name as the user types, but remains editable — this will be the identifier used elsewhere, e.g. matching what the real site sends to Firebase)
+  - Launch date & time (date/time picker)
+- One primary action button: "Create Collection"
+- On submit: show a mock success state — e.g. "Collection created" confirmation, and in a real build this would route to that collection's Detail screen — for now, just show the confirmation state, no real routing needed
+- Keep validation simple: don't let submit happen with an empty name or slug (basic inline validation, no need for anything elaborate)
+
+## Explicitly out of scope
+
+- No real Firebase write — mock/local state confirmation only
+- No duplicate-slug checking against real data (there's no real data yet)
+- No routing to Collection Detail after creation — the confirmation state is enough for this phase
+
+## Deliverable
+
+One responsive Create New Collection screen, previewable standalone, with a working form and a convincing mock success state on submit.
