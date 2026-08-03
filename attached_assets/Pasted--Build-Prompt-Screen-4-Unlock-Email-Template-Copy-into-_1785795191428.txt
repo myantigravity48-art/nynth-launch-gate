@@ -1,0 +1,47 @@
+# Build Prompt — Screen 4: Unlock Email Template
+
+Copy into Replit as its own component (an email template, not a page route). Build in isolation — preview it with mock data, no send logic yet.
+
+## Purpose
+
+The one piece of this entire tool a customer actually sees. Everything else is internal — this has to feel like Nynth, not like a system notification.
+
+## Format
+
+Build as an HTML email template (a React Email component if the project has that set up, otherwise a standalone HTML string/component you can preview in-browser). Email clients don't support modern CSS, so:
+- Use inline styles or a table-based layout, not Tailwind classes or flex/grid
+- No custom web fonts — system font stack only
+- Keep width around 600px, single column
+
+## Brand system — Nynth World
+
+- Pure white (#FFFFFF) and pure black (#000000) only — same discipline as the rest of the tool
+- This is the moment to bring back the editorial confidence from the original brand direction (bold type, generous spacing) — unlike the admin screens, this is customer-facing and represents Nynth directly
+
+## Mock data
+
+```ts
+type UnlockEmailData = {
+  collectionName: string;
+  password: string; // the unique unlock code
+  unlockUrl: string; // link to the real site's collection page
+};
+```
+
+## Content/layout
+
+- Nynth wordmark/logo placeholder at top
+- Short, confident headline — something like "[Collection Name] is live."
+- One line of body copy building anticipation, minimal
+- The password/unlock code displayed prominently — large, monospace or letter-spaced, unmistakable (this is the one piece of information the entire email exists to deliver)
+- A clear button/link: "Unlock the Collection" → points to the real site's collection URL
+- Minimal footer — just enough to not look like spam (e.g. "You're receiving this because you signed up for early access")
+
+## Explicitly out of scope
+
+- No real send logic, no Resend/email service integration yet
+- No dynamic data wiring — hardcode the mock values directly in this preview
+
+## Deliverable
+
+One email template previewable in-browser (or via a preview tool if using React Email), styled for actual email client compatibility, that could be dropped into a real send function with only the mock values swapped for real ones.
