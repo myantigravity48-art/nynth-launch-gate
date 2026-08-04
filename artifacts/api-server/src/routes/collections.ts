@@ -27,8 +27,10 @@ function slugParam(raw: string | string[]): string {
 function tsToIso(value: unknown): string {
   if (value instanceof Timestamp) return value.toDate().toISOString();
   if (value instanceof Date) return value.toISOString();
-  if (typeof value === "string") return value;
-  return String(value);
+  if (typeof value === "number") return new Date(value).toISOString();
+  if (typeof value === "string" && value) return value;
+  // Field missing or unrecognised — return epoch so the UI still renders
+  return new Date(0).toISOString();
 }
 
 function generatePassword(): string {
@@ -130,18 +132,23 @@ router.get("/collections/:slug/signups", async (req, res): Promise<void> => {
     return;
   }
 
-  const snap = await colRef.collection("signups").orderBy("createdAt", "asc").get();
-  const signups = snap.docs.map((doc) => {
-    const d = doc.data();
-    return {
-      id: doc.id,
-      collectionId: params.data.slug,
-      email: d["email"] as string,
-      password: (d["password"] as string | null) ?? null,
-      unlocked: d["unlocked"] as boolean,
-      createdAt: tsToIso(d["createdAt"]),
-    };
-  });
+  // Fetch without orderBy so Firestore doesn't silently drop docs whose
+  // createdAt field is missing or stored as a non-Timestamp type (common in
+  // manually-seeded collections). We sort in memory instead.
+  const snap = await colRef.collection("signups").get();
+  const signups = snap.docs
+    .map((doc) => {
+      const d = doc.data();
+      return {
+        id: doc.id,
+        collectionId: params.data.slug,
+        email: d["email"] as string,
+        password: (d["password"] as string | null) ?? null,
+        unlocked: d["unlocked"] as boolean,
+        createdAt: tsToIso(d["createdAt"]),
+      };
+    })
+    .sort((a, b) => a.createdAt.localeCompare(b.createdAt));
 
   res.json(ListSignupsResponse.parse(signups));
 });
