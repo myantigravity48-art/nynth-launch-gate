@@ -3,20 +3,23 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Nynth Launch Gate API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: collections
+    description: Drop collection management
+  - name: signups
+    description: Signup management
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,13 +27,210 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /collections:
+    get:
+      operationId: listCollections
+      tags: [collections]
+      summary: List all collections with signup counts
+      responses:
+        "200":
+          description: List of collections
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CollectionWithCount"
+    post:
+      operationId: createCollection
+      tags: [collections]
+      summary: Create a new collection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CollectionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Collection"
+        "409":
+          description: Slug already exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /collections/{slug}:
+    get:
+      operationId: getCollection
+      tags: [collections]
+      summary: Get a single collection by slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Collection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Collection"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /collections/{slug}/signups:
+    get:
+      operationId: listSignups
+      tags: [signups]
+      summary: List all signups for a collection
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of signups
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Signup"
+        "404":
+          description: Collection not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /collections/{slug}/send-unlock-emails:
+    post:
+      operationId: sendUnlockEmails
+      tags: [signups]
+      summary: Send unlock emails to all unlocked=false signups
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Send result summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SendUnlockResult"
+        "404":
+          description: Collection not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
 components:
   schemas:
     HealthStatus:
       type: object
+      required: [status]
       properties:
         status:
           type: string
-      required:
-        - status
 
+    Collection:
+      type: object
+      required: [id, name, launchDatetime, status]
+      properties:
+        id:
+          type: string
+          description: The collection slug (document ID in Firestore)
+        name:
+          type: string
+        launchDatetime:
+          type: string
+          description: ISO 8601 datetime string
+        status:
+          type: string
+          enum: [locked, live]
+
+    CollectionWithCount:
+      type: object
+      required: [id, name, launchDatetime, status, signupCount]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        launchDatetime:
+          type: string
+        status:
+          type: string
+          enum: [locked, live]
+        signupCount:
+          type: integer
+
+    CollectionInput:
+      type: object
+      required: [name, slug, launchDatetime]
+      properties:
+        name:
+          type: string
+          minLength: 1
+        slug:
+          type: string
+          minLength: 1
+        launchDatetime:
+          type: string
+          description: ISO 8601 datetime string
+
+    Signup:
+      type: object
+      required: [id, collectionId, email, unlocked, createdAt]
+      properties:
+        id:
+          type: string
+        collectionId:
+          type: string
+        email:
+          type: string
+        password:
+          type: ["string", "null"]
+        unlocked:
+          type: boolean
+        createdAt:
+          type: string
+
+    SendUnlockResult:
+      type: object
+      required: [sent, failed]
+      properties:
+        sent:
+          type: integer
+        failed:
+          type: integer
+        errors:
+          type: array
+          items:
+            type: string
+
+    ApiError:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string

@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Nynth Launch Gate"
+description = "Internal admin tool for the Nynth World team to manage drop collections, view signups, and send unlock emails via Resend. Backed by Firebase Firestore."
+version = "1.0.0"
+id = "artifacts/admin"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23744
+
+[services.development]
+run = "pnpm --filter @workspace/admin run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/admin", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/admin/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23744"
+BASE_PATH = "/"
