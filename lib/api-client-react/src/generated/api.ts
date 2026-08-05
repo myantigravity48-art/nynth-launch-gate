@@ -21,10 +21,12 @@ import type {
 
 import type {
   ApiError,
+  BroadcastEmailInput,
   Collection,
   CollectionInput,
   CollectionWithCount,
   HealthStatus,
+  SendBroadcastResult,
   SendUnlockResult,
   Signup
 } from './api.schemas';
@@ -434,6 +436,78 @@ export function useListSignups<TData = Awaited<ReturnType<typeof listSignups>>, 
 
 
 
+
+export const getSendBroadcastEmailUrl = (slug: string,) => {
+
+
+
+
+  return `/api/collections/${slug}/send-broadcast-email`
+}
+
+/**
+ * @summary Send a broadcast email to all signups for a collection
+ */
+export const sendBroadcastEmail = async (slug: string,
+    broadcastEmailInput: BroadcastEmailInput, options?: RequestInit): Promise<SendBroadcastResult> => {
+
+  return customFetch<SendBroadcastResult>(getSendBroadcastEmailUrl(slug),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(broadcastEmailInput)
+  }
+);}
+
+
+
+
+
+export const getSendBroadcastEmailMutationOptions = <TError = ErrorType<ApiError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof sendBroadcastEmail>>, TError,{slug: string;data: BodyType<BroadcastEmailInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof sendBroadcastEmail>>, TError,{slug: string;data: BodyType<BroadcastEmailInput>}, TContext> => {
+
+const mutationKey = ['sendBroadcastEmail'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof sendBroadcastEmail>>, {slug: string;data: BodyType<BroadcastEmailInput>}> = (props) => {
+          const {slug,data} = props ?? {};
+
+          return  sendBroadcastEmail(slug,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SendBroadcastEmailMutationResult = NonNullable<Awaited<ReturnType<typeof sendBroadcastEmail>>>
+    export type SendBroadcastEmailMutationBody = BodyType<BroadcastEmailInput>
+    export type SendBroadcastEmailMutationError = ErrorType<ApiError>
+
+    /**
+ * @summary Send a broadcast email to all signups for a collection
+ */
+export const useSendBroadcastEmail = <TError = ErrorType<ApiError>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof sendBroadcastEmail>>, TError,{slug: string;data: BodyType<BroadcastEmailInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof sendBroadcastEmail>>,
+        TError,
+        {slug: string;data: BodyType<BroadcastEmailInput>},
+        TContext
+      > => {
+      return useMutation(getSendBroadcastEmailMutationOptions(options));
+    }
 
 export const getSendUnlockEmailsUrl = (slug: string,) => {
 

@@ -3,17 +3,20 @@ import { randomBytes } from "node:crypto";
 import { Timestamp } from "firebase-admin/firestore";
 import { db } from "../lib/firebase.js";
 import { resend, FROM_EMAIL } from "../lib/resendClient.js";
-import { renderUnlockEmail } from "../lib/emailTemplate.js";
+import { renderUnlockEmail, renderBroadcastEmail } from "../lib/emailTemplate.js";
 import {
   CreateCollectionBody,
   GetCollectionParams,
   ListSignupsParams,
   SendUnlockEmailsParams,
+  SendBroadcastEmailParams,
+  SendBroadcastEmailBody,
   CreateCollectionResponse,
   GetCollectionResponse,
   ListCollectionsResponse,
   ListSignupsResponse,
   SendUnlockEmailsResponse,
+  SendBroadcastEmailResponse,
 } from "@workspace/api-zod";
 
 const router: IRouter = Router();

@@ -68,6 +68,68 @@ export function renderUnlockEmail(data: UnlockEmailData): string {
 </html>`;
 }
 
+interface BroadcastEmailData {
+  collectionName: string;
+  subject: string;
+  body: string;
+}
+
+export function renderBroadcastEmail(data: BroadcastEmailData): string {
+  const { collectionName, subject, body } = data;
+  // Convert newlines to <br> tags for plain-text body
+  const bodyHtml = escapeHtml(body).replace(/\n/g, "<br />");
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${escapeHtml(subject)}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f5f5f5;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f5f5f5;padding:40px 20px;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background-color:#ffffff;">
+
+          <!-- Wordmark header -->
+          <tr>
+            <td style="background-color:#000000;padding:32px 40px;">
+              <span style="color:#ffffff;font-size:13px;letter-spacing:0.25em;font-weight:700;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;">NYNTH</span>
+            </td>
+          </tr>
+
+          <!-- Subject line -->
+          <tr>
+            <td style="background-color:#ffffff;padding:40px 40px 0;">
+              <p style="margin:0;font-size:11px;letter-spacing:0.15em;font-weight:700;color:rgba(0,0,0,0.4);font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;">${escapeHtml(collectionName.toUpperCase())}</p>
+              <p style="margin:12px 0 0;font-size:26px;font-weight:700;color:#000000;letter-spacing:-0.02em;line-height:1.15;">${escapeHtml(subject)}</p>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="background-color:#ffffff;padding:24px 40px 40px;">
+              <p style="margin:0;font-size:15px;color:rgba(0,0,0,0.75);line-height:1.7;">${bodyHtml}</p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color:#ffffff;border-top:1px solid rgba(0,0,0,0.1);padding:32px 40px;">
+              <p style="margin:0;font-size:11px;color:rgba(0,0,0,0.4);line-height:1.6;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;">You&rsquo;re receiving this because you signed up for early access to Nynth World drops.</p>
+              <p style="margin:8px 0 0;font-size:11px;color:rgba(0,0,0,0.3);font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;">&copy; 2026 Nynth World. All rights reserved.</p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
 function escapeHtml(str: string): string {
   return str
     .replace(/&/g, "&amp;")

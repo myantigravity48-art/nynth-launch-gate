@@ -67,6 +67,19 @@ export interface SendUnlockResult {
   errors?: string[];
 }
 
+export interface BroadcastEmailInput {
+  /** @minLength 1 */
+  subject: string;
+  /** @minLength 1 */
+  body: string;
+}
+
+export interface SendBroadcastResult {
+  sent: number;
+  failed: number;
+  errors?: string[];
+}
+
 export interface ApiError {
   error: string;
 }

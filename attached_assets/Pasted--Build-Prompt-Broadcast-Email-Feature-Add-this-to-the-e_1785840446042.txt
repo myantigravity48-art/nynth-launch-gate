@@ -1,0 +1,35 @@
+# Build Prompt — Broadcast Email Feature
+
+Add this to the existing Nynth Launch Gate project in Replit — it already has Firebase and Resend wired up from the connect phase, reuse that setup.
+
+## Purpose
+
+Beyond the automatic unlock password email, Nynth needs to send general announcements/updates to everyone who signed up for a specific collection — e.g. "Restock happening tomorrow," "Collection selling out fast." This is a manual, one-off send, written fresh each time — not a template like the password email.
+
+## Where it lives
+
+Add a **"Send Broadcast Email"** button on the existing Collection Detail screen, next to (not replacing) "Send Unlock Emails." Clicking it opens a compose view — either a modal on the same page, or a new route `/admin/[slug]/broadcast`, whichever fits the existing routing pattern better.
+
+## Compose screen
+
+- Fields: **Subject** (text input) and **Body** (multi-line text area — plain text is fine, no need for a rich text editor)
+- Recipient count shown clearly above the form: "Sending to all X signups for [Collection Name]" — pulled from the real signup count, so there's no ambiguity about who's getting this before it's sent
+- A **"Send Broadcast"** button, with a confirmation step before it actually fires (e.g. a simple "Send to 24 people?" confirm dialog) — this is a real, irreversible send to real people, worth one extra click of friction
+- Same black/white Nynth World visual language as the rest of the admin tool
+
+## Server-side function: `sendBroadcastEmail(slug, subject, body)`
+
+- Fetch **all** signups for the given collection (not filtered by `unlocked` — broadcasts go to everyone who signed up, whether they've unlocked the collection or not)
+- Wrap the subject/body in the same black/white branded email shell used for the unlock email (logo placeholder, minimal footer) — but the body content itself is just the admin's typed text, not a fixed template
+- Loop through and send via Resend, same error-handling pattern as `sendUnlockEmails` — don't let one failure block the rest, collect and return a summary (sent count, failed count)
+- This does **not** touch the `password` or `unlocked` fields on any signup — broadcast sends are completely separate from the unlock mechanism
+
+## Explicitly out of scope
+
+- No scheduling for broadcast emails — this is a send-it-now action only
+- No saved drafts or send history log (can be a future addition if needed)
+- No recipient filtering beyond "everyone in this collection" — no segmenting by unlocked status, signup date, etc.
+
+## Deliverable
+
+A working compose-and-send flow on Collection Detail that sends a real, admin-written email to every real signup in that collection via Resend, with a confirmation step before it fires.

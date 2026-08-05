@@ -84,6 +84,29 @@ export const ListSignupsResponse = zod.array(ListSignupsResponseItem)
 
 
 /**
+ * @summary Send a broadcast email to all signups for a collection
+ */
+export const SendBroadcastEmailParams = zod.object({
+  "slug": zod.coerce.string()
+})
+
+
+
+
+
+export const SendBroadcastEmailBody = zod.object({
+  "subject": zod.string().min(1),
+  "body": zod.string().min(1)
+})
+
+export const SendBroadcastEmailResponse = zod.object({
+  "sent": zod.number(),
+  "failed": zod.number(),
+  "errors": zod.array(zod.string()).optional()
+})
+
+
+/**
  * @summary Send unlock emails to all unlocked=false signups
  */
 export const SendUnlockEmailsParams = zod.object({

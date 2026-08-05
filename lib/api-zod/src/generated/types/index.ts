@@ -7,11 +7,13 @@
  */
 
 export * from './apiError';
+export * from './broadcastEmailInput';
 export * from './collection';
 export * from './collectionInput';
 export * from './collectionStatus';
 export * from './collectionWithCount';
 export * from './collectionWithCountStatus';
 export * from './healthStatus';
+export * from './sendBroadcastResult';
 export * from './sendUnlockResult';
 export * from './signup';
