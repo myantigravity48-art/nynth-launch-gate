@@ -1,18 +1,35 @@
 import { Link } from "wouter";
 import { useListCollections } from "@workspace/api-client-react";
 
-function formatLaunchDate(value: string) {
-  const parts = new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-    timeZone: "UTC",
-  }).formatToParts(new Date(value));
-  const get = (type: string) => parts.find((part) => part.type === type)?.value ?? "";
-  return `${get("month")} ${get("day")}, ${get("year")} — ${get("hour")}:${get("minute")} ${get("dayPeriod")} UTC`;
+function formatLaunchDate(value: unknown): string {
+  try {
+    if (typeof value !== "string" || !value.trim()) return "—";
+    const date = new Date(value);
+    if (!Number.isFinite(date.getTime())) return "—";
+    const parts = new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+      timeZone: "UTC",
+    }).formatToParts(date);
+    const get = (type: string) => parts.find((part) => part.type === type)?.value ?? "";
+    return `${get("month")} ${get("day")}, ${get("year")} — ${get("hour")}:${get("minute")} ${get("dayPeriod")} UTC`;
+  } catch {
+    return "—";
+  }
+}
+
+function dateSortValue(value: unknown): number {
+  try {
+    if (typeof value !== "string" || !value.trim()) return 0;
+    const time = new Date(value).getTime();
+    return Number.isFinite(time) ? time : 0;
+  } catch {
+    return 0;
+  }
 }
 
 export default function Dashboard() {
@@ -21,8 +38,7 @@ export default function Dashboard() {
   const sortedCollections = collections
     ? [...collections].sort((a, b) => {
         if (a.status !== b.status) return a.status === "locked" ? -1 : 1;
-        const difference =
-          new Date(a.launchDatetime).getTime() - new Date(b.launchDatetime).getTime();
+        const difference = dateSortValue(a.launchDatetime) - dateSortValue(b.launchDatetime);
         return a.status === "locked" ? difference : -difference;
       })
     : [];

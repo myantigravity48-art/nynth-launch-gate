@@ -28,12 +28,17 @@ function slugParam(raw: string | string[]): string {
 }
 
 function tsToIso(value: unknown): string {
-  if (value instanceof Timestamp) return value.toDate().toISOString();
-  if (value instanceof Date) return value.toISOString();
-  if (typeof value === "number") return new Date(value).toISOString();
-  if (typeof value === "string" && value) return value;
-  // Field missing or unrecognised — return epoch so the UI still renders
-  return new Date(0).toISOString();
+  try {
+    let date: Date;
+    if (value instanceof Timestamp) date = value.toDate();
+    else if (value instanceof Date) date = value;
+    else if (typeof value === "number") date = new Date(value);
+    else if (typeof value === "string" && value.trim()) date = new Date(value);
+    else return "";
+    return Number.isFinite(date.getTime()) ? date.toISOString() : "";
+  } catch {
+    return "";
+  }
 }
 
 function generatePassword(): string {

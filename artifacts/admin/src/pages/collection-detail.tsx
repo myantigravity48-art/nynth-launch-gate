@@ -27,27 +27,41 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-function formatLaunchDate(value: string) {
-  const parts = new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-    timeZone: "UTC",
-  }).formatToParts(new Date(value));
-  const get = (type: string) => parts.find((part) => part.type === type)?.value ?? "";
-  return `${get("month")} ${get("day")}, ${get("year")} — ${get("hour")}:${get("minute")} ${get("dayPeriod")} UTC`;
+function formatLaunchDate(value: unknown): string {
+  try {
+    if (typeof value !== "string" || !value.trim()) return "—";
+    const date = new Date(value);
+    if (!Number.isFinite(date.getTime())) return "—";
+    const parts = new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+      timeZone: "UTC",
+    }).formatToParts(date);
+    const get = (type: string) => parts.find((part) => part.type === type)?.value ?? "";
+    return `${get("month")} ${get("day")}, ${get("year")} — ${get("hour")}:${get("minute")} ${get("dayPeriod")} UTC`;
+  } catch {
+    return "—";
+  }
 }
 
-function formatSignupDate(value: string) {
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    timeZone: "UTC",
-  }).format(new Date(value));
+function formatSignupDate(value: unknown): string {
+  try {
+    if (typeof value !== "string" || !value.trim()) return "Unknown date";
+    const date = new Date(value);
+    if (!Number.isFinite(date.getTime())) return "Unknown date";
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      timeZone: "UTC",
+    }).format(date);
+  } catch {
+    return "Unknown date";
+  }
 }
 
 export default function CollectionDetail() {
