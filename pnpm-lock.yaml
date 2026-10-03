@@ -160,6 +160,10 @@ importers:
         version: 5.9.3
 
   artifacts/admin:
+    dependencies:
+      '@workspace/api-server':
+        specifier: workspace:*
+        version: link:../api-server
     devDependencies:
       '@hookform/resolvers':
         specifier: ^3.10.0
@@ -269,9 +273,6 @@ importers:
       '@workspace/api-client-react':
         specifier: workspace:*
         version: link:../../lib/api-client-react
-      '@workspace/api-server':
-        specifier: workspace:*
-        version: link:../api-server
       class-variance-authority:
         specifier: 'catalog:'
         version: 0.7.1
