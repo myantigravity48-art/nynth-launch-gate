@@ -39,6 +39,7 @@ export default function CreateCollection() {
   const createCollection = useCreateCollection();
 
   const [submitted, setSubmitted] = useState(false);
+  const [createdPassword, setCreatedPassword] = useState("");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -69,8 +70,9 @@ export default function CreateCollection() {
         launchDatetime: date.toISOString()
       }
     }, {
-      onSuccess: () => {
+      onSuccess: (created) => {
         queryClient.invalidateQueries({ queryKey: getListCollectionsQueryKey() });
+        setCreatedPassword(typeof created.password === "string" ? created.password : "");
         setSubmitted(true);
       },
       onError: (err) => {
@@ -115,6 +117,11 @@ export default function CreateCollection() {
               Share the signup URL with your audience:
               <br />
               <span className="font-mono text-foreground/70">nynthworld.com/{form.getValues().slug}</span>
+            </p>
+            <p className="mt-8 text-sm leading-6">
+              Shared unlock password for this collection:
+              <br />
+              <span className="font-mono text-lg font-semibold tracking-wider" data-testid="text-shared-password">{createdPassword || "Unavailable"}</span>
             </p>
             <Link
               href="/"

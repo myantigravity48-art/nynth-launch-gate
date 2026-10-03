@@ -18,12 +18,14 @@ export const CollectionStatus = {
 } as const;
 
 export interface Collection {
-  /** The collection slug (document ID in Firestore) */
+  /** The collection slug used in admin URLs. */
   id: string;
   name: string;
   /** ISO 8601 datetime string */
   launchDatetime: string;
   status: CollectionStatus;
+  /** Returned only in the create response; shared by this collection's subscribers. */
+  password?: string;
 }
 
 export type CollectionWithCountStatus = typeof CollectionWithCountStatus[keyof typeof CollectionWithCountStatus];

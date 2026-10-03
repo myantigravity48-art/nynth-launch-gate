@@ -221,7 +221,7 @@ export default function CollectionDetail() {
                 }`}
                 data-testid={`badge-status-${collection.status}`}
               >
-                {collection.status.toUpperCase()}
+                {(typeof collection.status === "string" ? collection.status : "unknown").toUpperCase()}
               </span>
             </div>
           </div>

@@ -106,11 +106,11 @@ export default function Dashboard() {
                       }`}
                       data-testid={`status-${collection.status}-${collection.id}`}
                     >
-                      {collection.status.toUpperCase()}
+                      {(typeof collection.status === "string" ? collection.status : "unknown").toUpperCase()}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right font-mono text-sm tabular-nums" data-testid={`count-${collection.id}`}>
-                    {collection.signupCount.toLocaleString("en-US")}
+                    {(Number.isFinite(collection.signupCount) ? collection.signupCount : 0).toLocaleString("en-US")}
                   </td>
                   <td className="px-6 py-4 text-right text-lg text-foreground/40 transition-opacity group-hover:text-foreground">
                     <span aria-hidden="true">→</span>

@@ -43,10 +43,11 @@ export const CreateCollectionBody = zod.object({
 })
 
 export const CreateCollectionResponse = zod.object({
-  "id": zod.string().describe('The collection slug (document ID in Firestore)'),
+  "id": zod.string().describe('The collection slug used in admin URLs.'),
   "name": zod.string(),
   "launchDatetime": zod.string().describe('ISO 8601 datetime string'),
-  "status": zod.enum(['locked', 'live'])
+  "status": zod.enum(['locked', 'live']),
+  "password": zod.string()
 })
 
 
@@ -58,7 +59,7 @@ export const GetCollectionParams = zod.object({
 })
 
 export const GetCollectionResponse = zod.object({
-  "id": zod.string().describe('The collection slug (document ID in Firestore)'),
+  "id": zod.string().describe('The collection slug used in admin URLs.'),
   "name": zod.string(),
   "launchDatetime": zod.string().describe('ISO 8601 datetime string'),
   "status": zod.enum(['locked', 'live'])

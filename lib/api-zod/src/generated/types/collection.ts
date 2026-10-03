@@ -8,10 +8,12 @@
 import type { CollectionStatus } from './collectionStatus';
 
 export interface Collection {
-  /** The collection slug (document ID in Firestore) */
+  /** The collection slug used in admin URLs. */
   id: string;
   name: string;
   /** ISO 8601 datetime string */
   launchDatetime: string;
   status: CollectionStatus;
+  /** Shared unlock password, returned only when creating a collection. */
+  password?: string;
 }

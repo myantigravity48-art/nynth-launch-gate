@@ -41,7 +41,7 @@ export function renderUnlockEmail(data: UnlockEmailData): string {
             <td style="background-color:#ffffff;border-top:1px solid #000000;border-bottom:1px solid #000000;padding:40px;">
               <span style="display:block;font-size:10px;letter-spacing:0.2em;font-weight:700;color:rgba(0,0,0,0.5);margin-bottom:16px;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;">YOUR UNLOCK CODE</span>
               <span style="display:block;font-size:28px;font-weight:700;letter-spacing:0.15em;font-family:'Courier New',Courier,monospace;color:#000000;">${escapeHtml(password)}</span>
-              <span style="display:block;font-size:12px;color:rgba(0,0,0,0.4);margin-top:16px;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;">This code is unique to you. Don&rsquo;t share it.</span>
+              <span style="display:block;font-size:12px;color:rgba(0,0,0,0.4);margin-top:16px;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;">This code is shared with everyone who signed up for this collection.</span>
             </td>
           </tr>
 

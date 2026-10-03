@@ -58,7 +58,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Collection"
+                $ref: "#/components/schemas/CollectionCreated"
         "409":
           description: Slug already exists
           content:
@@ -195,7 +195,7 @@ components:
       properties:
         id:
           type: string
-          description: The collection slug (document ID in Firestore)
+          description: The collection slug used in admin URLs.
         name:
           type: string
         launchDatetime:
@@ -204,6 +204,22 @@ components:
         status:
           type: string
           enum: [locked, live]
+
+    CollectionCreated:
+      type: object
+      required: [id, name, launchDatetime, status, password]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        launchDatetime:
+          type: string
+        status:
+          type: string
+          enum: [locked, live]
+        password:
+          type: string
 
     CollectionWithCount:
       type: object
