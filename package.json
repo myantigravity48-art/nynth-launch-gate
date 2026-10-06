@@ -5,8 +5,8 @@
     "packageManager": "pnpm@10.28.0",
   "scripts": {
     "preinstall": "sh -c 'rm -f package-lock.json yarn.lock; case \"$npm_config_user_agent\" in pnpm/*) ;; *) echo \"Use pnpm instead\" >&2; exit 1 ;; esac'",
-    "build": "pnpm run typecheck && pnpm --filter @workspace/api-server build && pnpm --filter @workspace/admin build && pnpm --filter @workspace/mockup-sandbox build",
-    "typecheck:libs": "tsc --build",
+    "build": "pnpm run typecheck && pnpm --filter @workspace/api-server build && pnpm --filter @workspace/api-server bundle:vercel-function && pnpm --filter @workspace/admin build && pnpm --filter @workspace/mockup-sandbox build",
+    "typecheck:libs": "tsc --build --force",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck"
   },
   "private": true,

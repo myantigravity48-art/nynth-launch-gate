@@ -2,6 +2,7 @@
 
 # compiled output
 dist
+/artifacts/admin/api/\[...path\].js
 tmp
 out-tsc
 *.tsbuildinfo
