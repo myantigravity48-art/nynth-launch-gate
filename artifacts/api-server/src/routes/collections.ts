@@ -75,7 +75,7 @@ router.get("/collections/:slug/signups", async (req, res): Promise<void> => {
   const { data: collection, error: collectionError } = await findCollection(params.data.slug);
   if (collectionError) throw collectionError;
   if (!collection) { res.status(404).json({ error: "Collection not found" }); return; }
-  const { data, error } = await supabase.from("subscribers").select("id,email,created_at,notified").eq("collection_id", collection.id).order("created_at", { ascending: true });
+  const { data, error } = await supabase.from("subscribers").select("id,email,created_at,notified").eq("collection_id", String(collection.slug ?? params.data.slug)).order("created_at", { ascending: true });
   if (error) throw error;
   const signups = ((data ?? []) as Array<{ id: string | null; email: string | null; notified: boolean | null; created_at: string | null }>).map((row) => ({ id: String(row.id ?? ""), collectionId: params.data.slug, email: typeof row.email === "string" ? row.email : "", password: null, unlocked: row.notified === true, createdAt: safeIso(row.created_at) }));
   res.json(ListSignupsResponse.parse(signups));
@@ -88,7 +88,7 @@ router.post("/collections/:slug/send-unlock-emails", async (req, res): Promise<v
   if (collectionError) throw collectionError;
   if (!collection) { res.status(404).json({ error: "Collection not found" }); return; }
   if (typeof collection.password !== "string" || !collection.password) { res.status(500).json({ error: "Collection has no unlock password" }); return; }
-  const { data: pending, error } = await supabase.from("subscribers").select("id,email").eq("collection_id", collection.id).or("notified.is.null,notified.eq.false");
+  const { data: pending, error } = await supabase.from("subscribers").select("id,email").eq("collection_id", String(collection.slug ?? params.data.slug)).or("notified.is.null,notified.eq.false");
   if (error) throw error;
   const collectionName = typeof collection.name === "string" ? collection.name : "Your collection";
   const url = `https://nynthworld.com/${encodeURIComponent(String(collection.slug ?? params.data.slug))}`;
@@ -98,7 +98,7 @@ router.post("/collections/:slug/send-unlock-emails", async (req, res): Promise<v
   });
   let statusError: string | null = null;
   if (summary.delivered.length) {
-    const { error: activationError } = await supabase.rpc("activate_collection", { target_collection_id: collection.id });
+    const { error: activationError } = await supabase.rpc("activate_collection", { target_slug: String(collection.slug ?? params.data.slug) });
     if (activationError) {
       statusError = `Emails sent but collection could not be activated. Re-run unlock emails after applying the Supabase migration: ${activationError.message}`;
       summary.errors.push(statusError);
@@ -118,7 +118,7 @@ router.post("/collections/:slug/send-broadcast", async (req, res): Promise<void>
   const { data: collection, error: collectionError } = await findCollection(params.data.slug);
   if (collectionError) throw collectionError;
   if (!collection) { res.status(404).json({ error: "Collection not found" }); return; }
-  const { data, error } = await supabase.from("subscribers").select("id,email").eq("collection_id", collection.id);
+  const { data, error } = await supabase.from("subscribers").select("id,email").eq("collection_id", String(collection.slug ?? params.data.slug));
   if (error) throw error;
   const name = typeof collection.name === "string" ? collection.name : "Collection";
   const html = renderBroadcastEmail({ collectionName: name, subject: body.data.subject, body: body.data.body });
